@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Solar Match helps homeowners compare solar options, understand likely pricing, and avoid overpaying for rooftop solar." />
+  <meta property="og:title" content="Solar Match" />
+  <meta property="og:description" content="Know the likely solar price for 3kW, 5kW, and 10kW systems before you decide." />
+  <meta property="og:image" content="https://i.ibb.co/rGQBgd2K/IMG-20260417-181900.jpg" />
+  <title>Solar Match | Solar Pricing Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --dark-bg: #0a0a0f;
+      --dark-fg: #f1eddc;
+      --dark-muted: #7a7a90;
+      --dark-accent: #c8ff47;
+      --dark-card: rgba(10, 10, 15, 0.48);
+      --dark-border: rgba(200, 255, 71, 0.18);
+      --light-bg: #eef4ff;
+      --light-fg: #0b141a;
+      --light-muted: #5c6f83;
+      --light-accent: #1b7ed6;
+      --light-card: rgba(255, 255, 255, 0.72);
+      --light-border: rgba(27, 126, 214, 0.18);
+      --bg: var(--dark-bg);
+      --fg: var(--dark-fg);
+      --muted: var(--dark-muted);
+      --accent: var(--dark-accent);
+      --card: var(--dark-card);
+      --border: var(--dark-border);
+      --display: "Bebas Neue", sans-serif;
+      --mono: "DM Mono", monospace;
+      --inset: clamp(1rem, 2vw, 2rem);
+      --hairline: 1px;
+      --radius: 18px;
+      --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+      --maxw: 1180px;
+    }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+      --bg: var(--light-bg);
+      --fg: var(--light-fg);
+      --muted: var(--light-muted);
+      --accent: var(--light-accent);
+      --card: var(--light-card);
+      --border: var(--light-border);
+    }
+
+    * { box-sizing: border-box; }
+    *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top, rgba(200,255,71,.11), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(27,126,214,.12), transparent 28%),
+        linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 78%, #000 22%));
+      color: var(--fg);
+      font-family: var(--mono);
+      overflow-x: hidden;
+      transition: background .3s ease, color .3s ease;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+
+    .wrap {
+      width: min(var(--maxw), calc(100% - 2 * var(--inset)));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: var(--inset) var(--inset) auto var(--inset);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      pointer-events: none;
+    }
+
+    .brand {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: .8rem;
+      padding: .55rem .8rem;
+      border: var(--hairline) solid var(--border);
+      background: color-mix(in srgb, var(--card) 75%, transparent);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+      border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+    }
+
+    .brand .name {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      gap: .15rem;
+    }
+
+    .brand .name strong {
+      font-family: var(--display);
+      letter-spacing: .07em;
+      font-size: 1.45rem;
+      font-weight: 400;
+      line-height: .92;
+    }
+
+    .brand .name span {
+      font-size: .62rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .top-actions {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip, .icon-btn, .cta, .ghost, .submit, .fab {
+      border: var(--hairline) solid var(--border);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--card) 76%, transparent);
+      color: var(--fg);
+      box-shadow: var(--shadow);
+    }
+
+    .chip, .ghost, .cta, .submit, .fab {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .8rem 1.05rem;
+      transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+    }
+
+    .chip:hover, .ghost:hover, .cta:hover, .submit:hover, .fab:hover, .icon-btn:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+    }
+
+    .chip {
+      font-size: .72rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      display: inline-grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .icon-btn svg, .cta svg, .ghost svg, .submit svg, .fab svg { width: 15px; height: 15px; }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      align-items: end;
+      padding: calc(6.5rem + 2.5vw) 0 3rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      padding: 2rem 0 0;
+      max-width: 700px;
+    }
+
+    .tag {
+      font-size: .68rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 1rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease, translate .55s ease;
+    }
+
+    .visible { opacity: 1 !important; translate: 0 0 !important; }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 400;
+      letter-spacing: .03em;
+      line-height: .9;
+    }
+
+    h1 {
+      font-size: clamp(3.4rem, 9vw, 7.4rem);
+      max-width: 10ch;
+      opacity: 0;
+      translate: 0 18px;
+      transition: opacity .55s ease .05s, translate .55s ease .05s;
+    }
+
+    .hero-copy .lead {
+      margin-top: 1.1rem;
+      max-width: 62ch;
+      font-size: .92rem;
+      line-height: 1.9;
+      color: color-mix(in srgb, var(--fg) 68%, transparent);
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .12s, translate .55s ease .12s;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 1.6rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .18s, translate .55s ease .18s;
+    }
+
+    .cta {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: color-mix(in srgb, var(--accent) 72%, #fff 0%);
+      font-size: .78rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .ghost {
+      font-size: .78rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      border: var(--hairline) solid var(--border);
+      border-radius: calc(var(--radius) + 8px);
+      background: var(--card);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: var(--shadow);
+      min-height: 560px;
+      opacity: 0;
+      translate: 0 18px;
+      transition: opacity .55s ease .16s, translate .55s ease .16s;
+    }
+
+    .hero-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.05) contrast(1.03);
+      transform: scale(1.03);
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.58)),
+        radial-gradient(circle at 72% 20%, rgba(200,255,71,.18), transparent 20%);
+      pointer-events: none;
+    }
+
+    .panel-badge {
+      position: absolute;
+      left: 1rem;
+      bottom: 1rem;
+      z-index: 2;
+      display: grid;
+      gap: .45rem;
+      max-width: 300px;
+      padding: 1rem 1rem .95rem;
+      border-radius: 18px;
+      border: var(--hairline) solid color-mix(in srgb, var(--border) 82%, transparent);
+      background: color-mix(in srgb, var(--bg) 20%, rgba(0,0,0,.44));
+      backdrop-filter: blur(12px);
+    }
+
+    .panel-badge strong {
+      font-size: .8rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .panel-badge span {
+      font-size: .78rem;
+      line-height: 1.6;
+      color: color-mix(in srgb, var(--fg) 78%, transparent);
+    }
+
+    .section {
+      padding: 2rem 0;
+      min-height: auto;
+    }
+
+    .section-card {
+      border: var(--hairline) solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      font-size: .68rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease, translate .55s ease;
+    }
+
+    h2 {
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      opacity: 0;
+      translate: 0 18px;
+      transition: opacity .55s ease .05s, translate .55s ease .05s;
+    }
+
+    .copy {
+      font-size: .9rem;
+      line-height: 1.9;
+      color: color-mix(in srgb, var(--fg) 70%, transparent);
+      margin-top: 1rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .12s, translate .55s ease .12s;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .85rem;
+      margin-top: 1.5rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .18s, translate .55s ease .18s;
+    }
+
+    .stat {
+      padding: 1rem;
+      border-radius: 16px;
+      border: var(--hairline) solid var(--border);
+      background: color-mix(in srgb, var(--card) 82%, transparent);
+    }
+
+    .stat .num {
+      font-family: var(--display);
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--accent);
+    }
+
+    .stat .label {
+      margin-top: .4rem;
+      font-size: .62rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .checklist {
+      display: grid;
+      gap: .8rem;
+      margin-top: 1.4rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .2s, translate .55s ease .2s;
+    }
+
+    .checklist div {
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+      padding: .85rem 1rem;
+      border: var(--hairline) solid var(--border);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--card) 84%, transparent);
+      line-height: 1.55;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: .38rem;
+      background: var(--accent);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 55%, transparent);
+      flex: 0 0 auto;
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .9rem;
+      margin-top: 1.2rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .16s, translate .55s ease .16s;
+    }
+
+    .solar-card {
+      padding: 1rem;
+      border-radius: 16px;
+      border: var(--hairline) solid var(--border);
+      background: color-mix(in srgb, var(--card) 84%, transparent);
+    }
+
+    .solar-card strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: .4rem;
+    }
+
+    .solar-card span {
+      display: block;
+      font-size: .76rem;
+      line-height: 1.7;
+      color: color-mix(in srgb, var(--fg) 76%, transparent);
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .9rem;
+      margin-top: 1.2rem;
+      opacity: 1;
+      translate: 0 0;
+    }
+
+    .testimonial-card {
+      padding: 1rem 1rem .95rem;
+      border-radius: 16px;
+      border: var(--hairline) solid var(--border);
+      background: color-mix(in srgb, var(--card) 84%, transparent);
+    }
+
+    .testimonial-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .7rem;
+    }
+
+    .testimonial-name {
+      display: grid;
+      gap: .15rem;
+    }
+
+    .testimonial-name strong {
+      font-size: .82rem;
+      letter-spacing: .04em;
+    }
+
+    .testimonial-name span {
+      font-size: .62rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stars {
+      font-size: .75rem;
+      letter-spacing: .12em;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .testimonial-quote {
+      font-size: .8rem;
+      line-height: 1.75;
+      color: color-mix(in srgb, var(--fg) 78%, transparent);
+    }
+
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 1.5rem;
+      opacity: 0;
+      translate: 0 12px;
+      transition: opacity .55s ease .2s, translate .55s ease .2s;
+    }
+
+    .footer {
+      padding: 3rem 0 5rem;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.7;
+    }
+
+    .footer-inner {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      border-top: var(--hairline) solid var(--border);
+      padding-top: 1rem;
+      align-items: center;
+    }
+
+    .powered {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      color: color-mix(in srgb, var(--fg) 80%, transparent);
+      font-size: .76rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .powered img {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+    }
+
+    .floating {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      align-items: flex-end;
+    }
+
+    .fab.primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: color-mix(in srgb, var(--accent) 78%, #fff 0%);
+    }
+
+    .fab.whatsapp {
+      background: #25d366;
+      border-color: rgba(255,255,255,.2);
+      color: white;
+    }
+
+    .fab svg { width: 14px; height: 14px; }
+
+    .reveal { opacity: 0; translate: 0 12px; transition: opacity .55s ease, translate .55s ease; }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .section-inner,
+      .grid-cards { grid-template-columns: 1fr; }
+      .hero-panel { min-height: 420px; }
+      .stats { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { align-items: flex-start; }
+      .brand { padding: .5rem .7rem; }
+      .brand img { width: 34px; height: 34px; }
+      .brand .name strong { font-size: 1.25rem; }
+      .brand .name span { font-size: .56rem; }
+      .top-actions { gap: .45rem; }
+      .chip { padding: .7rem .9rem; font-size: .65rem; }
+      .icon-btn { width: 40px; height: 40px; }
+      .hero { padding-top: 7.5rem; }
+      .hero-panel { min-height: 320px; }
+      .section-inner { padding: 1rem; }
+      .floating { right: .8rem; bottom: .8rem; }
+      .fab { padding: .82rem .92rem; font-size: .68rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar wrap">
+    <a class="brand reveal" href="#top" aria-label="Solar Match home">
+      <img src="https://i.ibb.co/vxqQZ6C3/IMG-1051.png" alt="Solar Match logo" />
+      <div class="name">
+        <strong>SOLAR MATCH</strong>
+        <span>solar price check</span>
+      </div>
+    </a>
+
+    <div class="top-actions">
+      <a class="chip reveal" href="#journey">Complete your journey</a>
+      <button class="icon-btn reveal" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path>
+        </svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="tag reveal">Solar ka sahi price. Seedha, clear, bina confusion.</p>
+          <h1 class="reveal">Overpay mat karo.</h1>
+          <p class="lead reveal">
+            Bahut log solar lagwate waqt bas vendor ka bola hua rate maan lete hain. Baad mein pata chalta hai same setup aur sahi rate mein mil sakta tha. Solar Match ka kaam hai is confusion ko todna.
+          </p>
+          <div class="hero-actions reveal">
+            <a class="cta" href="#journey">See 3kW / 5kW / 10kW</a>
+            <a class="ghost" href="https://wa.me/919045745019?text=Hi%20Solar%20Match!%20Mujhe%20solar%20price%20aur%20system%20size%20samajhna%20hai." target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="hero-panel reveal">
+          <img src="https://i.ibb.co/rGQBgd2K/IMG-20260417-181900.jpg" alt="Rooftop solar hero visual" />
+          <div class="panel-badge">
+            <strong>Sahi option pe focus</strong>
+            <span>3kW, 5kW, aur 10kW ke liye expected pricing aur fit ka idea lo — taaki aap galat deal na le lo.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="journey">
+      <div class="section-card">
+        <div class="section-inner">
+          <div>
+            <p class="eyebrow reveal">Kya milta hai</p>
+            <h2 class="reveal">Simple answer. Real clarity.</h2>
+            <p class="copy reveal">
+              Hum fancy jargon nahi bechte. Hum seedha batate hain ki aapke liye kaunsa solar size fit banta hai, uska rough price kya hona chahiye, aur kis point pe aap extra pay kar rahe ho.
+            </p>
+            <div class="cta-row reveal">
+              <a class="cta" href="https://jaalworks.clappia.com/app/SFD022205" target="_blank" rel="noopener">Complete your journey</a>
+              <a class="ghost" href="https://wa.me/919045745019?text=Hi%20Solar%20Match!%20I%20want%20to%20check%20my%20solar%20options." target="_blank" rel="noopener">WhatsApp us</a>
+            </div>
+          </div>
+          <div>
+            <div class="grid-cards">
+              <div class="solar-card reveal">
+                <strong>3kW</strong>
+                <span>Chhota home use, low to moderate monthly bill ke liye.</span>
+              </div>
+              <div class="solar-card reveal">
+                <strong>5kW</strong>
+                <span>Medium family home ke liye balanced option.</span>
+              </div>
+              <div class="solar-card reveal">
+                <strong>10kW</strong>
+                <span>Bade load ya higher consumption wale property ke liye.</span>
+              </div>
+            </div>
+            <div class="checklist">
+              <div class="reveal"><span class="dot"></span><span>Aapko pata chalega ki kis system size ka rate realistic hai.</span></div>
+              <div class="reveal"><span class="dot"></span><span>Cheap aur overpriced dono trap se bachne mein help milti hai.</span></div>
+              <div class="reveal"><span class="dot"></span><span>Decision lena easy hota hai, bina vendor noise ke.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div>
+            <p class="eyebrow reveal">Why this matters</p>
+            <h2 class="reveal">Vendor ka rate, final truth nahi hota.</h2>
+            <p class="copy reveal">
+              Kaafi log ek hi system ke liye alag-alag price sunte hain. Koi installation ke naam pe zyada charge karta hai, koi unnecessary extras add karta hai. Solar Match aapko pehle understanding deta hai, phir aap decide karte ho.
+            </p>
+          </div>
+          <div>
+            <div class="checklist">
+              <div class="reveal"><span class="dot"></span><span>Jab aapko range pata hoti hai, negotiation stronger ho jati hai.</span></div>
+              <div class="reveal"><span class="dot"></span><span>Galat deal se bachkar aap paise aur time dono save karte ho.</span></div>
+              <div class="reveal"><span class="dot"></span><span>Yeh pehle samajh, phir action ka model hai.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div>
+            <p class="eyebrow reveal">How Solar Match works</p>
+            <h2 class="reveal">Form fill karo, baaki hum guide karenge.</h2>
+            <p class="copy reveal">
+              Jab aap <strong>Complete your journey</strong> form fill karte ho, to our team aapko WhatsApp ya email ke through contact karti hai. Phir aapke case ke hisaab se best prices ki list aur suitable options share kiye jaate hain. Simple process hai: samjho, compare karo, aur wahi choose karo jo aapki pocket bachaye.
+            </p>
+            <div class="cta-row reveal">
+              <a class="cta" href="https://jaalworks.clappia.com/app/SFD022205" target="_blank" rel="noopener">Complete your journey</a>
+              <a class="ghost" href="https://wa.me/919045745019?text=Hi%20Solar%20Match!%20Mujhe%20apna%20solar%20option%20samajhna%20hai." target="_blank" rel="noopener">WhatsApp us</a>
+            </div>
+          </div>
+          <div>
+            <div class="checklist">
+              <div class="reveal"><span class="dot"></span><span>Step 1: Form submit karo.</span></div>
+              <div class="reveal"><span class="dot"></span><span>Step 2: Team WhatsApp ya email par follow-up karegi.</span></div>
+              <div class="reveal"><span class="dot"></span><span>Step 3: Best available prices aur fit options milenge.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div>
+            <p class="eyebrow reveal">User voices</p>
+            <h2 class="reveal">User voices.</h2>
+            <p class="copy reveal">
+              Real user experiences jo logon ne share kiye after exploring solar options. Yeh section trust build karta hai aur decision easy banata hai.
+            </p>
+          </div>
+          <div>
+            <div class="testimonial-grid visible">
+              <div class="testimonial-card">
+                <div class="testimonial-top">
+                  <div class="testimonial-name"><strong>Rohan Sharma</strong><span>Lucknow</span></div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <div class="testimonial-quote">"Mujhe pehle hi idea mil gaya ki 5kW ke liye approx kitna budget chahiye. Confusion kaafi kam ho gaya."</div>
+              </div>
+              <div class="testimonial-card">
+                <div class="testimonial-top">
+                  <div class="testimonial-name"><strong>Ayesha Khan</strong><span>Kanpur</span></div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <div class="testimonial-quote">"WhatsApp par follow-up fast tha aur process simple laga. Direct aur clear communication mila."</div>
+              </div>
+              <div class="testimonial-card">
+                <div class="testimonial-top">
+                  <div class="testimonial-name"><strong>Imran Ali</strong><span>Aligarh</span></div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <div class="testimonial-quote">"Solar Match ne overpay karne se bachaya. Mujhe finally samajh aaya ki fair price kya hota hai."</div>
+              </div>
+              <div class="testimonial-card">
+                <div class="testimonial-top">
+                  <div class="testimonial-name"><strong>Neha Verma</strong><span>Meerut</span></div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <div class="testimonial-quote">"3kW aur 5kW ka difference finally clear hua. Ab decision lena easy lag raha hai."</div>
+              </div>
+              <div class="testimonial-card">
+                <div class="testimonial-top">
+                  <div class="testimonial-name"><strong>Salman Siddiqui</strong><span>Bareilly</span></div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <div class="testimonial-quote">"Form fill karne ke baad response achha mila, kaafi helpful tha. Time bhi bacha."</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer wrap">
+      <div class="footer-inner">
+        <div>Solar Match • solar pricing guidance</div>
+        <div class="powered"><img src="https://i.ibb.co/wF4Zr5Yq/IMG-1049.png" alt="JaalWorks logo" />Powered by JaalWorks</div>
+      </div>
+    </footer>
+  </main>
+
+  <div class="floating">
+    <a class="fab primary" href="https://jaalworks.clappia.com/app/SFD022205" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+      Complete journey
+    </a>
+    <a class="fab whatsapp" href="https://wa.me/919045745019?text=Hi%20Solar%20Match!%20Mujhe%20solar%20price%20aur%20best%20option%20samajhna%20hai." target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.7 7.4L3.5 20.5l1.5-4.1A8.5 8.5 0 1 1 20.5 11.6z"></path><path d="M8.5 9.5c.2 3.4 2.6 5.8 6 6l1.1-1.1"></path></svg>
+      WhatsApp
+    </a>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const sun = themeToggle.querySelector('.sun');
+    const moon = themeToggle.querySelector('.moon');
+
+    const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    let themeOverride = null;
+
+    const applyTheme = (theme) => {
+      root.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        sun.style.display = 'none';
+        moon.style.display = 'block';
+      } else {
+        sun.style.display = 'block';
+        moon.style.display = 'none';
+      }
+    };
+
+    const activeTheme = () => themeOverride || getSystemTheme();
+    applyTheme(activeTheme());
+
+    themeToggle.addEventListener('click', () => {
+      themeOverride = activeTheme() === 'dark' ? 'light' : 'dark';
+      applyTheme(themeOverride);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (!themeOverride) applyTheme(getSystemTheme());
+    });
+
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.14, rootMargin: '0px 0px -5% 0px' });
+
+    revealEls.forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.92) el.classList.add('visible');
+      io.observe(el);
+    });
+  </script>
+</body>
+</html>
